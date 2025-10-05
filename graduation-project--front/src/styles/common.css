@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+body {
+    background-color: #ffffff;
+    font-family: 'Tajawal', sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    direction: ltr;
+}
+
+.auth-card {
+    background: #fff;
+    padding: 50px 45px;
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 480px;
+    text-align: left;
+    border: 1px solid #f1f5f9;
+    position: relative;
+}
+
+.auth-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px auto;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 28px;
+    box-shadow: 0 6px 20px rgba(21, 101, 192, 0.3);
+}
+
+.auth-card h2 {
+    text-align: center;
+    color: #1e293b;
+    margin-bottom: 15px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.auth-card p {
+    text-align: center;
+    color: #64748b;
+    margin-bottom: 35px;
+    line-height: 1.6;
+    font-size: 17px;
+}
+
+.auth-card p strong {
+    color: #1565c0;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 16px;
+    text-align: left;
+}
+
+.form-input {
+    width: 100%;
+    padding: 16px 18px;
+    margin-top: 8px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s;
+    background-color: #fcfdfe;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.form-input::placeholder {
+    color: #9ca3af;
+    font-size: 15px;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #1565c0;
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.15);
+    background-color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    color: #fff;
+    border: none;
+    padding: 16px;
+    margin-top: 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 6px 20px rgba(21, 101, 192, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0d47a1 0%, #083885 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(21, 101, 192, 0.4);
+}
+
+.btn-primary:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.message {
+    margin-top: 20px;
+    text-align: center;
+    color: #ef4444;
+    font-size: 15px;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.auth-link {
+    color: #1565c0;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    font-size: 15px;
+    display: inline-block;
+    margin: 0 8px;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+    color: #0d47a1;
+    transform: translateY(-1px);
+}
+
+.auth-links p {
+    margin-top: 20px;
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 0;
+}
+
+
+/* اللوجو المشترك */
+
+.auth-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px auto;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 28px;
+    box-shadow: 0 6px 20px rgba(21, 101, 192, 0.3);
+}
+
+
+/* التصميم المتجاوب */
+
+@media (max-width: 520px) {
+    .auth-card {
+        padding: 40px 30px;
+        margin: 0 15px;
+        border-radius: 16px;
+    }
+    .auth-card h2 {
+        font-size: 24px;
+    }
+    .form-input {
+        padding: 14px 16px;
+    }
+    .btn-primary {
+        padding: 15px;
+    }
+    .auth-logo {
+        width: 70px;
+        height: 70px;
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 380px) {
+    .auth-card {
+        padding: 35px 25px;
+    }
+    .auth-card h2 {
+        font-size: 22px;
+    }
+    .auth-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+    }
+}
