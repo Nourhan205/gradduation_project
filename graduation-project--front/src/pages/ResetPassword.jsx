@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 import '../styles/common.css';
 import '../styles/auth.css';
 import logo from '../assets/logo.png';
@@ -9,6 +9,7 @@ function ResetPassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,6 +35,7 @@ function ResetPassword() {
       .then((res) => {
         if (res.ok) {
           setMessage("Your password has been reset successfully!");
+          setTimeout(() => navigate("/login"), 2000);
         } else {
           setMessage("Something went wrong. Try again later.");
         }

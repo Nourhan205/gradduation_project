@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link , useNavigate} from "react-router-dom";
 import '../styles/common.css';
 import '../styles/auth.css';
 import logo from '../assets/logo.png';
@@ -8,7 +8,7 @@ function ForgetPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -28,6 +28,7 @@ function ForgetPassword() {
       .then((res) => {
         if (res.ok) {
           setMessage("If this email exists, you'll receive a reset link soon.");
+          setTimeout(() => navigate("/verification"), 1500);
         } else {
           setMessage("Something went wrong. Try again later.");
         }
