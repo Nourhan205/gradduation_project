@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Mahmoud Ali Mohammed Ali Elbermawy",
+    "email": "moelbermawy96@gmail.com",
+    "password": "123456789",
+    "confirmPassword": "123456789"
+  },
+  {
+    "name": "mahmoud ali mohammed",
+    "email": "moelbermawy@gmail.com",
+    "password": "ahmed222",
+    "confirmPassword": "ahmed222"
+  },
+  {
+    "name": "ali ali",
+    "email": "mmppoo0120@gmail.com",
+    "password": "ali123123",
+    "confirmPassword": "ali123123"
+  }
+]
