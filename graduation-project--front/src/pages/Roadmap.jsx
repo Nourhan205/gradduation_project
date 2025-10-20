@@ -7,11 +7,11 @@ import {
   FaDownload,
   FaSave,
 } from "react-icons/fa";
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component";
-import "react-vertical-timeline-component/style.min.css";
+// import {
+//   VerticalTimeline,
+//   VerticalTimelineElement,
+// } from "react-vertical-timeline-component";
+// import "react-vertical-timeline-component/style.min.css";
 import { jsPDF } from "jspdf";
 import { useNavigate } from "react-router-dom";
 import "../styles/Roadmap.css";
@@ -25,6 +25,35 @@ function Roadmap() {
   const [loading, setLoading] = useState(false);
 
   const BackEnd_url = "";
+  
+  const StaticRoadmap = ()=> {
+    let generatedRoadmap = [];
+
+    if (interests.toLowerCase().includes("ai")) {
+      generatedRoadmap = [
+        { step: "Learn Python fundamentals", icon: <FaLaptopCode /> },
+        { step: "Study Machine Learning basics", icon: <FaRobot /> },
+        { step: "Build a simple image classification project", icon: <FaGraduationCap /> },
+        { step: "Explore PyTorch or TensorFlow", icon: <FaChartLine /> },
+      ];
+    } else if (interests.toLowerCase().includes("web")) {
+      generatedRoadmap = [
+        { step: "Start with HTML & CSS", icon: <FaLaptopCode /> },
+        { step: "Learn JavaScript", icon: <FaGraduationCap /> },
+        { step: "Learn React or Vue", icon: <FaRobot /> },
+        { step: "Build a full web project", icon: <FaChartLine /> },
+      ];
+    } else {
+      generatedRoadmap = [
+        { step: "Revise basic programming concepts", icon: <FaLaptopCode /> },
+        { step: "Identify your preferred learning domain", icon: <FaChartLine /> },
+        { step: "Start introductory courses", icon: <FaGraduationCap /> },
+      ];
+    }
+
+    setRoadmap(generatedRoadmap);
+  };
+
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -56,33 +85,6 @@ function Roadmap() {
     }
   }
 
-    function StaticRoadmap() {
-    let generatedRoadmap = [];
-
-    if (interests.toLowerCase().includes("ai")) {
-      generatedRoadmap = [
-        { step: "Learn Python fundamentals", icon: <FaLaptopCode /> },
-        { step: "Study Machine Learning basics", icon: <FaRobot /> },
-        { step: "Build a simple image classification project", icon: <FaGraduationCap /> },
-        { step: "Explore PyTorch or TensorFlow", icon: <FaChartLine /> },
-      ];
-    } else if (interests.toLowerCase().includes("web")) {
-      generatedRoadmap = [
-        { step: "Start with HTML & CSS", icon: <FaLaptopCode /> },
-        { step: "Learn JavaScript", icon: <FaGraduationCap /> },
-        { step: "Learn React or Vue", icon: <FaRobot /> },
-        { step: "Build a full web project", icon: <FaChartLine /> },
-      ];
-    } else {
-      generatedRoadmap = [
-        { step: "Revise basic programming concepts", icon: <FaLaptopCode /> },
-        { step: "Identify your preferred learning domain", icon: <FaChartLine /> },
-        { step: "Start introductory courses", icon: <FaGraduationCap /> },
-      ];
-    }
-
-    setRoadmap(generatedRoadmap);
-  }
 
   function handleDownloadpdf() {
     if (!roadmap || roadmap.length === 0) return;
@@ -199,7 +201,7 @@ function Roadmap() {
       {roadmap.length > 0 && (
         <div className="roadmap-timeline">
           <h3>Your Learning Plan:</h3>
-          <VerticalTimeline>
+          {/* <VerticalTimeline>
             {roadmap.map((item, index) => (
               <VerticalTimelineElement
                 key={index}
@@ -211,8 +213,21 @@ function Roadmap() {
                 <h4>{item.step}</h4>
               </VerticalTimelineElement>
             ))}
-          </VerticalTimeline>
-
+          </VerticalTimeline> */}
+          
+            <div className="simple-timeline">
+              {roadmap.map((item, index) => (
+              <div key={index} className="timeline-step">
+               <div className="step-number">{index + 1}</div>
+               <div className="step-icon">
+                {item.icon}
+               </div>
+               <div className="step-content">
+              <h4>{item.step}</h4>
+             </div>
+             </div>
+      ))}
+    </div>
           <div className="roadmap-actions">
             <button className="download-btn" onClick={handleDownloadpdf}>
               <FaDownload /> Download Roadmap
