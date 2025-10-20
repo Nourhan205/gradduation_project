@@ -4,11 +4,12 @@ import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
+import Roadmap from './pages/Roadmap';
 import './App.css';
 
 function App() {
   return (
-    <BrowserRouter>
+    
       <Routes>
        
         <Route path="/" element={<Navigate to="/login" />} />
@@ -18,9 +19,11 @@ function App() {
         <Route path="/forgetPassword" element={<ForgetPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/verification" element={<VerificationCode />} />
+        <Route path="/roadmap" element={<Roadmap />} />
+        <Route path="/verification" element={<VerificationCode />} />
+
       </Routes>
-    </BrowserRouter>
+   
   );
 }
 
