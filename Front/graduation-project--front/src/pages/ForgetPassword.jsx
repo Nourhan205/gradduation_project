@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // ✅ أضف useNavigate
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/common.css";
 import "../styles/auth.css";
 import logo from "../assets/logo.png";
@@ -8,8 +8,9 @@ function ForgetPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // ✅ لاستخدام التنقل بعد النجاح
+  const navigate = useNavigate();
 
+  // ✅ make the function async
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,17 +29,11 @@ function ForgetPassword() {
         body: JSON.stringify({ email }),
       });
 
-      const data = await res.json();
-
       if (res.ok) {
-        // ✅ خزن الإيميل علشان تستخدمه في صفحة Verify
-        localStorage.setItem("resetEmail", email);
-
-        setMessage("Verification code sent! Redirecting...");
-        // ✅ انقل المستخدم بعد 1.5 ثانية لصفحة verify-code
+        setMessage("If this email exists, you'll receive a reset link soon.");
         setTimeout(() => navigate("/verification"), 1500);
       } else {
-        setMessage(data.error || "Something went wrong. Try again later.");
+        setMessage("Something went wrong. Try again later.");
       }
     } catch (error) {
       setMessage("Network error. Please check your connection.");
@@ -81,7 +76,9 @@ function ForgetPassword() {
         {message && <p className="message">{message}</p>}
 
         <div className="auth-links">
-          <Link to="/login" className="auth-link">Back to Login</Link>
+          <Link to="/login" className="auth-link">
+            Back to Login
+          </Link>
         </div>
       </div>
     </div>

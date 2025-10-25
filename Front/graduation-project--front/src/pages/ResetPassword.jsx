@@ -28,21 +28,24 @@ function ResetPassword() {
     setMessage("");
 
    fetch("http://localhost:5000/reset-password", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     email: localStorage.getItem("resetEmail"),
     password: password
   }),
-})
-  .then((res) => {
-    if (res.ok) {
-      setMessage("Your password has been reset successfully!");
-      setTimeout(() => navigate("/login"), 2000);
-    } else {
-      setMessage("Something went wrong. Try again later.");
-    }
-  })
+    })
+      .then((res) => {
+        if (res.ok) {
+          setMessage("Your password has been reset successfully!");
+          setTimeout(() => navigate("/login"), 2000);
+        } else {
+          setMessage("Something went wrong. Try again later.");
+        }
+      })
+      .catch(() => {
+        setMessage("Network error. Please check your connection.");
+      })
       .finally(() => setLoading(false));
   };
 

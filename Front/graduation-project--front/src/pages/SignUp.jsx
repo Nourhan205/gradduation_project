@@ -28,8 +28,8 @@ function SignUp() {
 
     try {
       const res = await fetch("http://localhost:5000/signup", { // <-- Flask backend
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, confirmPassword }),
       });
 
@@ -38,11 +38,11 @@ function SignUp() {
       if (res.ok) {
         toast.success(data.message, { position: "top-right", autoClose: 2000 });
         setTimeout(() => navigate("/login"), 2000);
-      } else {
-        toast.error(data.error || "Registration failed!");
-      }
+        } else {
+          toast.error(data.error || "Registration failed!");
+        }
     } catch (err) {
-      toast.error("Network error, please try again.");
+        toast.error("Network error, please try again.");
     }
   };
 

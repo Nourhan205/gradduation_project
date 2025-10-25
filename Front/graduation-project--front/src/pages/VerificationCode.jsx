@@ -23,25 +23,25 @@ function VerificationCode() {
     setMessage("");
 
     fetch("http://localhost:5000/verification", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
     email: localStorage.getItem("resetEmail"), // الإيميل اللي المستخدم أدخله في صفحة forgot password
     code: code,
   }),
-})
-  .then((res) => {
-    if (res.ok) {
-      setMessage("Code verified successfully!");
-      setTimeout(() => navigate("/reset-password"), 1500);
-    } else {
-      setMessage("Invalid verification code. Please try again.");
-    }
-  })
-  .catch(() => {
-    setMessage("Network error. Please check your connection.");
-  })
-  .finally(() => setLoading(false)); 
+    })
+      .then((res) => {
+        if (res.ok) {
+          setMessage("Code verified successfully!");
+          setTimeout(() => navigate("/reset-password"), 1500);
+        } else {
+          setMessage("Invalid verification code. Please try again.");
+        }
+      })
+      .catch(() => {
+        setMessage("Network error. Please check your connection.");
+      })
+      .finally(() => setLoading(false));
   };
 
   const handleResend = () => {
@@ -52,7 +52,6 @@ function VerificationCode() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: "user@example.com" }), 
-      
     })
       .then((res) => {
         if (res.ok) {
