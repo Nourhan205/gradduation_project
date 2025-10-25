@@ -20,7 +20,7 @@ function Login() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/login", { // <-- Flask backend
+      const res = await fetch("http://localhost:5000/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -36,12 +36,12 @@ function Login() {
         });
         setTimeout(() => navigate("/Dashboard"), 2000);
       } else {
-        toast.error(data.error || "Login failed! Check your credentials.", {
+        toast.error("Login failed! Please check your credentials.", {
           position: "top-right",
           autoClose: 3000,
         });
       }
-    } catch {
+    } catch (error) {
       toast.error("Network error. Please try again later.", {
         position: "top-right",
         autoClose: 3000,
@@ -49,14 +49,15 @@ function Login() {
     }
   };
 
+
   return (
     <div className="login-page">
-      <div className="login-header">
-        <div className="logo-container">
-          <img src={logo} alt="EduPick Logo" className="auth-logo" />
-          <h1 className="site-name">EduPick</h1>
+        <div className="login-header">
+          <div className="logo-container">
+            <img src={logo} alt="EduPick Logo" className="auth-logo" />
+             <h1 className="site-name">EduPick</h1>
+          </div>
         </div>
-      </div>
 
       <div className="auth-card">
         <h2>Welcome back!</h2>

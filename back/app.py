@@ -13,6 +13,7 @@ client = MongoClient("mongodb://localhost:27017/")
 db=client["graduation_project"]
 users_collection=db["users"]
 data_collection=db["data_collection"]
+roadmap_collection=db["roadmap_collection"]
 data_collection.update_one(
     {"email": "test@example.com"},
     {"$set": {
@@ -187,6 +188,54 @@ def dashboard():
 
     return jsonify(dashboard_data), 200
 
+
+def generate_static_roadmap(interests, level, goal):
+    interests = interests.lower()
+    roadmap = []
+
+    if "ai" in interests:
+        roadmap = [
+            {"step": "Learn Python fundamentals"},
+            {"step": "Study Machine Learning basics"},
+            {"step": "Build a simple image classification project"},
+            {"step": "Explore PyTorch or TensorFlow"},
+        ]
+    elif "web" in interests:
+        roadmap = [
+            {"step": "Start with HTML & CSS"},
+            {"step": "Learn JavaScript"},
+            {"step": "Learn React or Vue"},
+            {"step": "Build a full web project"},
+        ]
+    else:
+        roadmap = [
+            {"step": "Revise basic programming concepts"},
+            {"step": "Identify your preferred learning domain"},
+            {"step": "Start introductory courses"},
+        ]
+
+    return roadmap
+
+@app.route("/roadmap",methods=["POST"])
+def roadmap():
+    try:
+        data=request.json
+        interests=data.get ("interests")
+        level=data.get ("level") 
+        goal=data.get ("goal")
+        roadmap_collection.insert_one({
+          "interests":interests,
+          "level":level,
+          "goal":goal,
+      
+        })
+
+        roadmap=generate_static_roadmap(interests,level,goal)
+
+        return jsonify({"steps": roadmap}), 200
+    except Exception as e:
+       print("Error:", e)
+       return jsonify({"error": "Failed to generate roadmap"}), 500
 # # Run server
 if __name__ == "__main__":
     app.run(debug=True)
