@@ -107,6 +107,12 @@ function Dashboard() {
           <p>No saved roadmaps</p>
         )}
       </section>
+      <button
+       className="chatbot-float-btn"
+       onClick={() => window.location.href = "/chatbot"}
+      >
+        💬 
+      </button>
     </div>
   );
 }
