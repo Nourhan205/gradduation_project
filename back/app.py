@@ -7,7 +7,7 @@ import random
 import string
 import smtplib
 from datetime import datetime, timedelta
-
+from chatbot_engine import chatbot_answer
 load_dotenv()
 app = Flask(__name__)
 CORS(app)
@@ -240,7 +240,7 @@ def roadmap():
     except Exception as e:
        print("Error:", e)
        return jsonify({"error": "Failed to generate roadmap"}), 500
-@app.route("/chat", methods=["POST"])
+@app.route("/chatbot", methods=["POST"])
 def chat():
     data = request.get_json()
     user_message = data.get("message", "")

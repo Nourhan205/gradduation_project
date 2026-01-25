@@ -2,6 +2,7 @@
 import os
 import json
 import dotenv
+import tensorflow as tf
 from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
@@ -9,11 +10,15 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
+import warnings
 
 # =============================
 # Configuration
 # =============================
-DATA_PATH = "Front/graduation-project--front/src/data/chatbot_final_data.json"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
+  # 0=all, 1=info, 2=warnings, 3=errors only
+DATA_PATH = "D:\College\gradduation_project\Front\graduation-project--front\src\data\chatbot_final_data.json"
 CHROMA_DIR = "./chroma_optimized_chunks"
 dotenv.load_dotenv()
 # API key must come from environment
