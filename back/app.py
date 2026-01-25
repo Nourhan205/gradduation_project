@@ -240,6 +240,14 @@ def roadmap():
     except Exception as e:
        print("Error:", e)
        return jsonify({"error": "Failed to generate roadmap"}), 500
+@app.route("/chat", methods=["POST"])
+def chat():
+    data = request.get_json()
+    user_message = data.get("message", "")
+
+    reply = chatbot_answer(user_message)
+
+    return jsonify({"reply": reply})
 # # Run server
 if __name__ == "__main__":
     app.run(debug=True)
