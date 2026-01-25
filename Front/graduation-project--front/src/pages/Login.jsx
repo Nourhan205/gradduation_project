@@ -34,7 +34,7 @@ function Login() {
           position: "top-right",
           autoClose: 2000,
         });
-        setTimeout(() => navigate("/Dashboard"), 2000);
+        setTimeout(() => navigate("/"), 2000);
       } else {
         toast.error("Login failed! Please check your credentials.", {
           position: "top-right",

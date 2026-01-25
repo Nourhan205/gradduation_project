@@ -1,15 +1,18 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
+from dotenv import load_dotenv
 from pymongo import MongoClient
 import random
 import string
 import smtplib
 from datetime import datetime, timedelta
 
+load_dotenv()
 app = Flask(__name__)
 CORS(app)
-
-client = MongoClient("mongodb://localhost:27017/")
+Mongo_url=os.getenv('MONGO_URL')
+client = MongoClient(Mongo_url)
 db=client["graduation_project"]
 users_collection=db["users"]
 data_collection=db["data_collection"]
@@ -34,7 +37,8 @@ data_collection.update_one(
 )
 print("Connected ")
 # Helper functions
-
+db = client["graduation_db"]
+careers_collection = db["careers"]
 
 # Home
 @app.route("/")
