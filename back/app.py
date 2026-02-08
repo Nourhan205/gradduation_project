@@ -1,3 +1,4 @@
+from bson import ObjectId
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
@@ -8,6 +9,12 @@ import string
 import smtplib
 from datetime import datetime, timedelta
 from chatbot_engine import chatbot_answer
+import torch
+from fastapi import FastAPI
+from pydantic import BaseModel
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+import re
+
 load_dotenv()
 app = Flask(__name__)
 CORS(app)
@@ -35,6 +42,15 @@ data_collection.update_one(
     }},
     upsert=True
 )
+roadmap_collection.update_one(
+    {"user_id": ObjectId("64a1f0c8e1b2c9d5f0a1b2c3")},
+    {"$set": {
+        "interests": "AI and Data Science",
+        "level": "Beginner",
+        "goal": "Become a Data Scientist",
+        "roadmap": "String",
+        "user_id": ObjectId("64a1f0c8e1b2c9d5f0a1b2c3")}},
+    upsert=True)
 print("Connected ")
 # Helper functions
 db = client["graduation_db"]
@@ -193,53 +209,7 @@ def dashboard():
     return jsonify(dashboard_data), 200
 
 
-def generate_static_roadmap(interests, level, goal):
-    interests = interests.lower()
-    roadmap = []
 
-    if "ai" in interests:
-        roadmap = [
-            {"step": "Learn Python fundamentals"},
-            {"step": "Study Machine Learning basics"},
-            {"step": "Build a simple image classification project"},
-            {"step": "Explore PyTorch or TensorFlow"},
-        ]
-    elif "web" in interests:
-        roadmap = [
-            {"step": "Start with HTML & CSS"},
-            {"step": "Learn JavaScript"},
-            {"step": "Learn React or Vue"},
-            {"step": "Build a full web project"},
-        ]
-    else:
-        roadmap = [
-            {"step": "Revise basic programming concepts"},
-            {"step": "Identify your preferred learning domain"},
-            {"step": "Start introductory courses"},
-        ]
-
-    return roadmap
-
-@app.route("/roadmap",methods=["POST"])
-def roadmap():
-    try:
-        data=request.json
-        interests=data.get ("interests")
-        level=data.get ("level") 
-        goal=data.get ("goal")
-        roadmap_collection.insert_one({
-          "interests":interests,
-          "level":level,
-          "goal":goal,
-      
-        })
-
-        roadmap=generate_static_roadmap(interests,level,goal)
-
-        return jsonify({"steps": roadmap}), 200
-    except Exception as e:
-       print("Error:", e)
-       return jsonify({"error": "Failed to generate roadmap"}), 500
 @app.route("/chatbot", methods=["POST"])
 def chat():
     data = request.get_json()
@@ -248,6 +218,102 @@ def chat():
     reply = chatbot_answer(user_message)
 
     return jsonify({"reply": reply})
+
+
+
+##Roadmap Generation with Qwen2.5-3B-Instruct
+MODEL_NAME = "Qwen/Qwen2.5-3B-Instruct"
+
+tokenizer = AutoTokenizer.from_pretrained(
+    MODEL_NAME,
+    trust_remote_code=True
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    MODEL_NAME,
+    torch_dtype=torch.float16,
+    device_map="auto",
+    trust_remote_code=True
+)
+class RoadmapRequest(BaseModel):
+    interests: str
+    level: str
+    goal: str
+
+# =====================
+# Roadmap generation
+# =====================
+def generate_roadmap(interests: str, level: str, goal: str) -> str:
+    prompt = f"""
+You are an expert learning planner.
+
+The user wants a roadmap.
+
+User request:
+"Interests: {interests}, Level: {level}, Goal: {goal}"
+
+Create a clear and structured roadmap.
+Divide it into phases or months.
+Use simple bullet points.
+"""
+
+    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+
+    outputs = model.generate(
+        **inputs,
+        max_new_tokens=600,
+        temperature=0.7
+    )
+
+    return tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+# =====================
+# Parsing function
+# =====================
+def parse_roadmap_string(roadmap_str: str):
+    parsed = {}
+    current_phase = None
+
+    for line in roadmap_str.split("\n"):
+        line = line.strip()
+        if not line:
+            continue
+
+        if line.startswith("###"):
+            current_phase = line.replace("###", "").strip()
+            parsed[current_phase] = []
+        elif current_phase and line.startswith(("-", "*")):
+            task = re.sub(r"\*\*(.*?)\*\*", r"\1", line[1:].strip())
+            parsed[current_phase].append(task)
+
+    return {k: v for k, v in parsed.items() if v}
+@app.route("/roadmap", methods=["POST"])
+def roadmap():
+    try:
+        data = request.json
+        interests = data.get("interests")
+        level = data.get("level")
+        goal = data.get("goal")
+       
+
+        roadmap_text = generate_roadmap(interests, level, goal)
+        roadmap_parsed = parse_roadmap_string(roadmap_text)
+        roadmap_collection.insert_one({
+            "interests": interests,
+            "level": level,
+            "goal": goal,
+            "roadmap":roadmap_text
+        })
+        return jsonify({
+            "raw_text": roadmap_text,
+            "parsed": roadmap_parsed
+        }), 200
+
+
+    except Exception as e:
+        print("Error:", e)
+        return jsonify({"error": "Failed to generate roadmap"}), 500
+
 # # Run server
 if __name__ == "__main__":
     app.run(debug=True)
