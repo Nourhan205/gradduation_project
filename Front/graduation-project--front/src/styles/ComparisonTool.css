@@ -1,0 +1,609 @@
+.career-comparison-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.tool-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #eaeaea;
+}
+
+.tool-header h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.5rem;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.api-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    background: #f8f9fa;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-dot.success {
+    background: #28a745;
+    animation: pulse 2s infinite;
+}
+
+.status-dot.error {
+    background: #dc3545;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.tool-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+}
+
+
+/* Loading and Error States */
+
+.loading-state,
+.error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.error-state h3 {
+    color: #dc3545;
+    margin-bottom: 10px;
+}
+
+.error-state p {
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+.retry-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s;
+}
+
+.retry-btn:hover {
+    background: #0056b3;
+}
+
+
+/* API Warning */
+
+.api-warning {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+
+/* Selection Panel Styles */
+
+.selection-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    height: fit-content;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.panel-header h2 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.selection-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.selected-count {
+    background: #3498db;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.clear-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.clear-btn:hover {
+    background: #c0392b;
+}
+
+.career-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.career-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.career-card:hover {
+    border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.1);
+}
+
+.career-card.selected {
+    border-color: #2ecc71;
+    background: linear-gradient(135deg, #f8fff9 0%, #e8f6ef 100%);
+}
+
+.career-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.career-card-header h3 {
+    color: #2c3e50;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.selection-indicator {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background: #f1f8ff;
+    border: 2px solid #3498db;
+    color: #3498db;
+}
+
+.career-card.selected .selection-indicator {
+    background: #2ecc71;
+    border-color: #2ecc71;
+    color: white;
+}
+
+.career-description {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.career-highlight {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.highlight-label {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+}
+
+.highlight-value {
+    color: #27ae60;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+
+/* Comparison Panel Styles */
+
+.comparison-panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.comparison-panel h2 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+}
+
+.comparison-placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    color: #95a5a6;
+}
+
+.placeholder-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+}
+
+.comparison-placeholder small {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.selected-careers-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.selected-careers-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+}
+
+.comparison-table-container {
+    overflow-x: auto;
+    margin-bottom: 40px;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.comparison-table th {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.comparison-table th:first-child {
+    background: #34495e;
+    text-align: left;
+}
+
+.comparison-table td {
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    vertical-align: top;
+}
+
+.metric-label {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+    width: 200px;
+}
+
+.no-data {
+    color: #95a5a6;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.skills-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.skills-list li {
+    background: #e3f2fd;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.outlook-badge {
+    display: inline-block;
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.outlook-badge.excellent {
+    background: #d4edda;
+    color: #155724;
+}
+
+.outlook-badge.good {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.outlook-badge.average {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+
+/* Growth Rate Styles */
+
+.growth-rate {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.growth-value {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #2c3e50;
+}
+
+.growth-bar {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.growth-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.salary-cell {
+    text-align: center;
+}
+
+.salary-cell strong {
+    font-size: 1.3rem;
+    color: #27ae60;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.salary-per-year {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+}
+
+.education-level {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 3px solid #3498db;
+}
+
+
+/* Summary Section */
+
+.comparison-summary {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #eaeaea;
+}
+
+.comparison-summary h3 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+}
+
+.insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.insight-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: transform 0.3s ease;
+}
+
+.insight-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.insight-icon {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.insight-content h4 {
+    color: #2c3e50;
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+}
+
+.insight-value {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.insight-subtext {
+    color: #7f8c8d;
+    font-size: 0.85rem;
+    margin: 5px 0 0 0;
+}
+
+
+/* Export Options */
+
+.export-options {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eaeaea;
+}
+
+.export-btn {
+    flex: 1;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+}
+
+.export-btn:hover {
+    background: #f8f9fa;
+    border-color: #3498db;
+    transform: translateY(-2px);
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 1200px) {
+    .tool-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .career-comparison-container {
+        padding: 10px;
+    }
+    .tool-header h1 {
+        font-size: 2rem;
+    }
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .selection-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .comparison-table th,
+    .comparison-table td {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+    .insights-grid {
+        grid-template-columns: 1fr;
+    }
+    .export-options {
+        flex-direction: column;
+    }
+    .export-btn {
+        width: 100%;
+    }
+}

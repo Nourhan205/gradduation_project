@@ -9,7 +9,6 @@ function Chatbot() {
   const [messages, setMessages] = useState([
     { sender: "bot", text: "Hello! I'm your AI assistant. How can I help you today?" }
   ]);
-
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
@@ -84,7 +83,7 @@ function Chatbot() {
   return (
     <div className="chatbot-container">
       <div className="chat-header">
-        EduGuide <br />
+        EduPick <br />
         <span>Always here to help</span>
       </div>
 

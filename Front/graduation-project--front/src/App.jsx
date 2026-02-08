@@ -6,6 +6,7 @@ import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import Roadmap from './pages/Roadmap';
 import Chatbot from './pages/Chatbot';
+import ComparisonTool from './pages/ComparisonTool';
 import Home from './pages/Home';
 import './App.css';
 
@@ -26,7 +27,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/roadmap" element={<Roadmap />} />
         <Route path="/chatbot" element={<Chatbot />} />
-
+        <Route path="/ComparisonTool" element={<ComparisonTool/>} />
         {/* Redirect unknown routes */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

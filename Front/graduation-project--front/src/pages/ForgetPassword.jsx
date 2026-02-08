@@ -10,7 +10,7 @@ function ForgetPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ make the function async
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -35,6 +35,7 @@ function ForgetPassword() {
       } else {
         setMessage("Something went wrong. Try again later.");
       }
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       setMessage("Network error. Please check your connection.");
     } finally {

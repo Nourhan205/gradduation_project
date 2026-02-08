@@ -41,6 +41,7 @@ function Login() {
           autoClose: 3000,
         });
       }
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       toast.error("Network error. Please try again later.", {
         position: "top-right",

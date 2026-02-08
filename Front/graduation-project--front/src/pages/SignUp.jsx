@@ -41,6 +41,7 @@ function SignUp() {
         } else {
           toast.error(data.error || "Registration failed!");
         }
+    // eslint-disable-next-line no-unused-vars
     } catch (err) {
         toast.error("Network error, please try again.");
     }
