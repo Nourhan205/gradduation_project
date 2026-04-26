@@ -8,6 +8,9 @@ import Roadmap from './pages/Roadmap';
 import Chatbot from './pages/Chatbot';
 import ComparisonTool from './pages/ComparisonTool';
 import Home from './pages/Home';
+import Test from './pages/Test';
+import MainTest from './pages/MainTest';
+import PerviousResults from './pages/PreivousResults';
 import './App.css';
 
 function App() {
@@ -28,6 +31,10 @@ function App() {
         <Route path="/roadmap" element={<Roadmap />} />
         <Route path="/chatbot" element={<Chatbot />} />
         <Route path="/ComparisonTool" element={<ComparisonTool/>} />
+        <Route path="/test" element={<Test />} />
+        <Route path="/test/main-test" element={<MainTest />} />
+        <Route path="/test/previous-results" element={<PerviousResults />} />
+
         {/* Redirect unknown routes */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>

@@ -14,7 +14,7 @@ import {
   FaBalanceScale
 } from "react-icons/fa";
 import "../styles/home.css";
-
+import { FaClipboardList } from "react-icons/fa";
 function Home() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -65,6 +65,9 @@ function Home() {
 
           <li onClick={() => navigate("/chatbot")}>
             <FaRobot /> AI Assistant
+          </li>
+          <li onClick={() => navigate("/test")}>
+            <FaClipboardList /> Test Track
           </li>
         </ul>
       </div>
