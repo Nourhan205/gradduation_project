@@ -1,6 +1,8 @@
 from bson import ObjectId
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from crewai import Task , Crew , Process
+from comparison_tool import llm, LANG_CONFIG, search_web, create_comparator_agent
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient
@@ -8,7 +10,7 @@ import random
 import string
 import smtplib
 from datetime import datetime, timedelta
-from chatbot_engine import chatbot_answer
+# from chatbot_engine import chatbot_answer
 import torch
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -40,7 +42,7 @@ data_collection.update_one(
             "Started Data Science Roadmap"
         ]
     }},
-    upsert=True
+   upsert=True
 )
 roadmap_collection.update_one(
     {"user_id": ObjectId("64a1f0c8e1b2c9d5f0a1b2c3")},
@@ -313,6 +315,50 @@ def roadmap():
     except Exception as e:
         print("Error:", e)
         return jsonify({"error": "Failed to generate roadmap"}), 500
+
+@app.route("/compare", methods=["POST"])
+def compare():
+    try:
+        data = request.json
+        lang          = data.get("lang", "en")
+        tracks        = data.get("tracks", "")
+        location      = data.get("location", "Global")
+        currency      = data.get("currency", "USD")
+        year          = data.get("year", "2026")
+        criteria_nums = data.get("criteria", "4")
+
+        if not tracks:
+            return jsonify({"error": "tracks field is required"}), 400
+
+        cfg = LANG_CONFIG.get(lang, LANG_CONFIG['en'])
+        criteria = ", ".join([
+            cfg['criteria'][n.strip()]
+            for n in criteria_nums.split(",")
+            if n.strip() in cfg['criteria']
+        ])
+
+        comparator = create_comparator_agent(lang)
+        task = Task(
+            description=cfg['task_prompt'].format(
+                tracks=tracks, location=location,
+                currency=currency, year=year, criteria=criteria
+            ),
+            expected_output=cfg['expected_output'],
+            agent=comparator
+        )
+        crew = Crew(agents=[comparator], tasks=[task], process=Process.sequential, verbose=False)
+        result = crew.kickoff(inputs={
+            "tracks": tracks, "location": location,
+            "currency": currency, "year": year, "criteria": criteria
+        })
+
+        return jsonify({"result": result.raw}), 200
+
+    except Exception as e:
+        print("Comparison error:", e)
+        return jsonify({"error": "Failed to run comparison"}), 500
+
+
 
 # # Run server
 if __name__ == "__main__":
