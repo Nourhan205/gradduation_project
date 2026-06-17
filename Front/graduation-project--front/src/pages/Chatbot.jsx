@@ -1,152 +1,229 @@
-import React, { useState, useRef, useEffect } from "react";
-import "../styles/chatbot.css";
-import { FaUser, FaRobot, FaTelegramPlane } from "react-icons/fa";
+import React, { useState } from "react";
+import "../styles/Chatbot.css";
 
-function Chatbot({ backendUserName }) {
-  const [messages, setMessages] = useState([]);
+import {
+  FaRobot,
+  FaUserCircle,
+  FaPaperPlane,
+  FaBars,
+} from "react-icons/fa";
+
+// 🔹 Change this to your real backend URL (e.g. an env variable in production)
+const API_URL = "http://localhost:5000";
+
+export default function Chatbot() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [userPath, setUserPath] = useState(null); // 1: track only, 2: college + track
-  const messagesEndRef = useRef(null);
+  const [showRoadmap, setShowRoadmap] = useState(false);
 
-  // Scroll to bottom on new messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  const [roadmapData] = useState({
+    currentTopic: "No topic selected",
+    progress: 0,
+    nextTopic: "Waiting for roadmap",
+  });
 
-  // Typing effect
-  const typeWriter = (fullText) => {
-    let index = 0;
-    setMessages((prev) => [...prev, { sender: "bot", text: "" }]);
-    setLoading(true);
+  const [messages, setMessages] = useState([
+    {
+      type: "bot",
+      text: "Hi! I'm EduPick AI Assistant. Ask me anything about your learning roadmap.",
+    },
+  ]);
 
-    const interval = setInterval(() => {
-      setMessages((prev) => {
-        const updatedMessages = [...prev];
-        const last = updatedMessages[updatedMessages.length - 1];
-        updatedMessages[updatedMessages.length - 1] = {
-          ...last,
-          text: fullText.slice(0, index + 1) // show text progressively
-        };
-        return updatedMessages;
-      });
+  const sendMessage = async () => {
+    if (!input.trim()) return;
 
-      index++;
-      if (index === fullText.length) {
-        clearInterval(interval);
-        setLoading(false);
-      }
-    }, 30);
-  };
+    const question = input;
 
-  const sendMessage = async (msg) => {
-    if (!msg.trim()) return;
-    const userMessage = { sender: "user", text: msg };
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages((prev) => [
+      ...prev,
+      {
+        type: "user",
+        text: question,
+      },
+    ]);
+
     setInput("");
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/chatbot", {
+      // 🔹 FIXED: this call used to be commented out (demo mode only).
+      // 🔹 FIXED: body key is now "message" to match what the Flask
+      //    /chatbot route reads (it used to send "question").
+      const res = await fetch(`${API_URL}/chatbot`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg, pathType: userPath })
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: question,
+        }),
       });
+
       const data = await res.json();
-      const botFullText = data.reply || "Sorry, I couldn't understand that.";
-      typeWriter(botFullText);
-    // eslint-disable-next-line no-unused-vars
+
+      if (!res.ok || data.error) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "bot",
+            text: data.error || "Sorry, something went wrong. Please try again.",
+          },
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            type: "bot",
+            text: data.answer,
+            suggestions: data.suggestions,
+          },
+        ]);
+      }
     } catch (err) {
+      console.log(err);
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: "Error connecting to server." }
+        {
+          type: "bot",
+          text: "Couldn't reach the server. Please check your connection and try again.",
+        },
       ]);
+    } finally {
+      // 🔹 FIXED: this was missing for the real-API path, so the
+      // "AI is thinking..." indicator would have stayed on forever.
       setLoading(false);
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") sendMessage(input);
+  const handleSuggestion = (text) => {
+    setInput(text);
   };
 
-  // Handle path selection
-  const handlePathSelection = (path) => {
-    setUserPath(path);
-    const name = backendUserName || "User";
-    let welcomeMsg = "";
-
-    if (path === 1) {
-      welcomeMsg = `Hello ${name}! We will help you choose the right track.`;
-    } else {
-      welcomeMsg = `Hello ${name}! We will help you choose the right university and track.`;
-    }
-
-    setMessages([]); // clear old messages
-    typeWriter(welcomeMsg);
-  };
-
-  // Before user chooses path, show buttons
-  if (!userPath) {
-    return (
-      <div className="chatbot-container">
-        <div className="chat-header">
-          EduPick <br />
-          <span>Always here to help</span>
-        </div>
-        <div className="chat-window" style={{ padding: "20px" }}>
-          <div className="path-selection">
-            <p>Choose Your Path :</p>
-            <button onClick={() => handlePathSelection(1)}> Need Recommendation for Tracks Only 🎯 </button>
-            <button onClick={() => handlePathSelection(2)}>Need Recommendation for Tracks and University 🎓</button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // After path selected, show normal chat
   return (
-    <div className="chatbot-container">
-      <div className="chat-header">
-        EduPick <br />
-        <span>Always here to help</span>
-      </div>
+    <div className="chat-page">
+      <div className="header">
+        <div className="brand">
+          <img
+            className="logo"
+            src="/src/assets/logo.png"
+            alt="EduPick AI"
+          />
 
-      <div className="chat-window">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={`message-row ${msg.sender === "user" ? "user" : "bot"}`}
-          >
-            {msg.sender === "bot" && <div className="icon bot-icon"><FaRobot /></div>}
-            <div className={`message-bubble ${msg.sender}`}>{msg.text}</div>
-            {msg.sender === "user" && <div className="icon user-icon"><FaUser /></div>}
+          <div>
+            <h2>EduPick AI</h2>
+            <span>Learning Assistant</span>
           </div>
-        ))}
+        </div>
 
-        {loading && (
-          <div className="loading-row">
-            <div className="loading-bubble">Typing...</div>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="chat-input">
-        <input
-          type="text"
-          placeholder="Type your message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-        />
-        <button onClick={() => sendMessage(input)} className="send-btn">
-          <FaTelegramPlane size={22} />
+        <button
+          className="roadmap-btn"
+          onClick={() => setShowRoadmap(!showRoadmap)}
+        >
+          <FaBars className="menu-icon" />
+          <span>Roadmap</span>
         </button>
+      </div>
+
+      <div className="chat-body">
+        <div
+          className={`roadmap-panel ${
+            showRoadmap ? "open" : ""
+          }`}
+        >
+          <h3>Roadmap Progress</h3>
+
+          <div className="card">
+            <h4>Current Topic</h4>
+
+            <p>{roadmapData.currentTopic}</p>
+
+            <div className="bar">
+              <div
+                className="fill"
+                style={{
+                  width: `${roadmapData.progress}%`,
+                }}
+              />
+            </div>
+
+            <span>
+              {roadmapData.progress}% Completed
+            </span>
+          </div>
+
+          <div className="card">
+            <h4>Next Topic</h4>
+            <p>{roadmapData.nextTopic}</p>
+          </div>
+        </div>
+
+        <div className="messages">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`message ${msg.type}`}
+            >
+              <div className="avatar">
+                {msg.type === "bot" ? (
+                  <FaRobot />
+                ) : (
+                  <FaUserCircle />
+                )}
+              </div>
+
+              <div className="bubble">
+                <p>{msg.text}</p>
+
+                {msg.suggestions?.length > 0 && (
+                  <div className="suggestions">
+                    {msg.suggestions.map(
+                      (s, index) => (
+                        <button
+                          key={index}
+                          onClick={() =>
+                            handleSuggestion(s)
+                          }
+                        >
+                          {s}
+                        </button>
+                      )
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          ))}
+
+          {loading && (
+            <div className="loading">
+              AI is thinking...
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="input-area">
+        <div className="input-wrapper">
+          <input
+            value={input}
+            placeholder="Ask anything..."
+            onChange={(e) =>
+              setInput(e.target.value)
+            }
+            onKeyDown={(e) =>
+              e.key === "Enter" &&
+              sendMessage()
+            }
+          />
+
+          <button
+            className="send-btn"
+            onClick={sendMessage}
+          >
+            <FaPaperPlane />
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-
-export default Chatbot;

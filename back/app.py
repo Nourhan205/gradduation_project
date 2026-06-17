@@ -10,12 +10,13 @@ import random
 import string
 import smtplib
 from datetime import datetime, timedelta
-# from chatbot_engine import chatbot_answer
 import torch
 from fastapi import FastAPI
 from pydantic import BaseModel
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 import re
+
+from ai_core import AICore
 
 load_dotenv()
 app = Flask(__name__)
@@ -210,18 +211,21 @@ def dashboard():
 
     return jsonify(dashboard_data), 200
 
-
-
 @app.route("/chatbot", methods=["POST"])
 def chat():
     data = request.get_json()
     user_message = data.get("message", "")
-
-    reply = chatbot_answer(user_message)
-
-    return jsonify({"reply": reply})
-
-
+ 
+    if not user_message.strip():
+        return jsonify({"error": "message is required"}), 400
+ 
+    try:
+        result = ai_core.generate_response(user_message, context=None)
+        return jsonify(result), 200
+    except Exception as e:
+        print("Chatbot error:", e)
+        return jsonify({"error": "Failed to get chatbot response"}), 500
+ 
 
 ##Roadmap Generation with Qwen2.5-3B-Instruct
 MODEL_NAME = "Qwen/Qwen2.5-3B-Instruct"
